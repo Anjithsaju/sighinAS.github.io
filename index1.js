@@ -59,7 +59,7 @@ function si(){
                     if(pass1==data[j].password)
                         {
                             console.log("succesfull");
-                            alert("login succesfull");
+                            
                             location.replace('https://anjithsaju.github.io/');
                         }
                     else{console.log("unsuccesfull");
