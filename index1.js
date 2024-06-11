@@ -60,7 +60,7 @@ function si(){
                         {
                             console.log("succesfull");
                             alert("login succesfull");
-                            location.replace('asenter.html');
+                            location.replace('https://anjithsaju.github.io/');
                         }
                     else{console.log("unsuccesfull");
                         alert("wrong password");
