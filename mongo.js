@@ -1,3 +1,5 @@
+const data2=require('./index1');
+console.log(data2);
 const mongoose=require('mongoose')
 mongoose.connect("mongodb+srv://anjithsaju123:Iameditor2.0@anjithsaju.lzvvo2m.mongodb.net/?retryWrites=true&w=majority&appName=Anjithsaju")
 .then(()=>{

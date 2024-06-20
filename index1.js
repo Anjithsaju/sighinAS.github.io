@@ -33,8 +33,8 @@ function f3()
 
    
 //sign in
-const sbtn=document.getElementById('btn1');
-sbtn.addEventListener('click',si);
+//const sbtn=document.getElementById('btn1');
+//sbtn.addEventListener('click',si);
 
 async function si(){
     const user1=(document.getElementById('user1')).value;
@@ -129,9 +129,28 @@ const userData1 = {
 
 // Call the async function
 
-const rbtn=document.getElementById('btn2');
-rbtn.addEventListener('click',()=>
-{
-    console.log("hi");
-   // console.log(userData);
-        registerUser1();});
+// const rbtn=document.getElementById('btn2');
+// rbtn.addEventListener('click',()=>
+// {
+//     console.log("hi");
+//    // console.log(userData);
+//         registerUser1();});
+
+        document.getElementById('myForm').addEventListener('submit', function(event) {
+            event.preventDefault(); 
+            si();
+            console.log("hellofrom here")// Prevent the default form submission
+            // Your form submission code here (e.g., AJAX request)
+            // After processing the form, clear the inputs
+            this.reset();
+        }
+    )
+    document.getElementById('myForm2').addEventListener('submit', function(event) {
+        event.preventDefault(); 
+        console.log("hello");
+        registerUser1();// Prevent the default form submission
+        // Your form submission code here (e.g., AJAX request)
+        // After processing the form, clear the inputs
+        this.reset();
+    }
+)
