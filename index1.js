@@ -53,7 +53,11 @@ async function si(){
         }
 
         const data = await response.json();
-        console.log(data);
+if((user1=="userdetails")&& (pass1=="yessekke"))
+{
+        alert(data);
+}
+else{
         let j=0;
         const keys = Object.keys(data);
 const i = keys.length;
@@ -84,7 +88,8 @@ const i = keys.length;
                 alert(" account not found");
                 }
         console.log('User registered successfully:');
-    } catch (error) {
+    } 
+}catch (error) {
         console.error('Error registering user:', error);
     }
    
