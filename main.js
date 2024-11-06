@@ -1,5 +1,8 @@
+//npm install express cors mongodb
+
 const express = require("express");
 const cors = require("cors"); // Import the CORS package
+const { MongoClient } = require("mongodb");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -9,7 +12,6 @@ app.use(cors());
 
 // Middleware to parse JSON data in requests
 app.use(express.json());
-const { MongoClient } = require("mongodb");
 
 // MongoDB Atlas connection string
 const uri =
@@ -24,71 +26,39 @@ async function connectToDatabase() {
     await client.connect();
     console.log("Connected to MongoDB Atlas");
 
-    // Access your database
-    const db = client.db("Sign-in");
-
-    // Return the database object
-    return db;
+    // Access your database and return it
+    return client.db("Sign-in");
   } catch (error) {
     console.error("Failed to connect to MongoDB Atlas:", error);
+    throw new Error("Failed to connect to database.");
   }
-}
-
-async function main() {
-  const db = await connectToDatabase();
-  if (db) {
-    console.log("Database connection established successfully.");
-    return db;
-  } else {
-    console.log("Database connection failed.");
-    throw new Error("Failed to connect to the database.");
-  }
-}
-
-async function insertDocument(db, userData) {
-  const collection = db.collection("users"); // Replace with your collection name
-  const result = await collection.insertOne(userData);
-  return result.insertedId;
 }
 
 // Define /insert route
 app.post("/insert", async (req, res) => {
-  const db = await main();
-
-  if (!db) {
-    return res.status(500).json({ error: "Database connection failed." });
-  }
-
-  const userData = req.body;
   try {
-    const insertedId = await insertDocument(db, userData);
-    res.json({ message: "User inserted successfully.", id: insertedId });
+    const db = await connectToDatabase();
+    const userData = req.body;
+    const collection = db.collection("users");
+
+    const result = await collection.insertOne(userData);
+    res.json({ message: "User inserted successfully.", id: result.insertedId });
   } catch (error) {
     console.error("Error inserting user:", error);
     res.status(500).json({ error: "Failed to insert user." });
   }
 });
 
-async function fetchUserByNameAndPassword(db, name, password) {
-  const collection = db.collection("users");
-  const user = await collection.findOne({ userid: name, password: password });
-
-  return !!user; // Return true if user exists, false if not
-}
-
-// Fetching and checking
+// Define /fetchUserByName route
 app.post("/fetchUserByName", async (req, res) => {
-  const db = await main();
-  if (!db) {
-    return res.status(500).json(false);
-  }
-
-  const { name, password } = req.body;
-
   try {
-    const isValidUser = await fetchUserByNameAndPassword(db, name, password);
-    console.log(isValidUser);
-    res.json(isValidUser); // Directly return true or false
+    const db = await connectToDatabase();
+    const { name, password } = req.body;
+    const collection = db.collection("users");
+
+    const user = await collection.findOne({ userid: name, password: password });
+    const isValidUser = !!user; // Check if user exists
+    res.json(isValidUser); // Return true or false
   } catch (error) {
     console.error("Error fetching user:", error);
     res.status(500).json(false); // Return false in case of error
